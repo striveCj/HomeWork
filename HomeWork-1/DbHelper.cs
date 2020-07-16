@@ -7,18 +7,18 @@ using System.Text;
 
 namespace HomeWork_1
 {
-    public class DbHelper<T> where T:BaseModel.BaseModel,new()
+    public class DbHelper
     {
         /// <summary>
         /// 链接字符串，需要转到json配置中去
         /// </summary>
-        private string _connString = @"Data Source=.;Initial Catalog=HomeWork;User ID=sa;Password=w1!";
+        private string _connString = @"Data Source=WH-PC-CHENJ30\SQL2014;Initial Catalog=HomeWork;User ID=sa;Password=95938";
 
         /// <summary>
         /// 查询所有数据
         /// </summary>
         /// <returns></returns>
-        public List<T> FindAll()
+        public List<T> FindAll<T>() where T:BaseModel.BaseModel
         {
             Type t = typeof(T);
             using (SqlConnection conn=new SqlConnection(_connString))
@@ -31,9 +31,14 @@ namespace HomeWork_1
             }
         }
 
-        public T FindById(int id)
+        /// <summary>
+        /// 更具主键获取参数
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public T FindById<T>(int id) where T : BaseModel.BaseModel, new()
         {
-            Type t = typeof(T);
+            var t = typeof(T);
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 conn.Open();
@@ -46,33 +51,149 @@ namespace HomeWork_1
         }
 
         /// <summary>
+        /// 新增方法
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public int Add<T>(T t) where T : BaseModel.BaseModel
+        {
+            var modelType = t.GetType();
+            var properties = modelType.GetProperties();
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+                var sql = GetInsertSql(modelType, properties);
+                SqlCommand comm = new SqlCommand(sql, conn);
+                foreach (var propertied in properties)
+                {
+                    comm.Parameters.AddWithValue($"@{propertied.Name}", propertied.GetValue(t));
+                }
+                return comm.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// 修改方法
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public int Update<T>(T t) where T : BaseModel.BaseModel
+        {
+            var modelType = t.GetType();
+            var properties = modelType.GetProperties();
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+                var sql = GetUpdateSql(modelType, properties);
+                SqlCommand comm = new SqlCommand(sql, conn);
+
+                foreach (var propertied in properties)
+                {
+                    comm.Parameters.AddWithValue($"@{propertied.Name}", propertied.GetValue(t));
+                }
+
+                return comm.ExecuteNonQuery();
+
+            }
+        }
+
+        /// <summary>
+        /// 删除方法
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int Delete<T>(int id) where T : BaseModel.BaseModel
+        {
+            var modelType = typeof(T);
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+                var sql = GetDeleteSql(modelType);
+                SqlCommand comm = new SqlCommand(sql, conn);
+                comm.Parameters.AddWithValue($"@Id",id);
+                return comm.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// 获取新增sql
+        /// </summary>
+        /// <param name="modelType"></param>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        private  string GetInsertSql(Type modelType, PropertyInfo[] properties)
+        {
+            StringBuilder sb = new StringBuilder();
+            string valueSql = "";
+            sb.Append($"insert [{modelType.Name}] (");
+
+            for (int i = 0; i < properties.Length; i++)
+            {
+                if (properties[i].Name.ToLower() == "id") continue;
+
+                sb.Append(i == properties.Length - 2 ? properties[i].Name : $"{properties[i].Name},");
+                valueSql += i == properties.Length - 2 ? $"@{properties[i].Name}" : $"@{properties[i].Name},";
+            }
+
+            sb.Append(") Values(");
+            sb.Append(valueSql);
+            sb.Append(")");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 获取修改sql
+        /// </summary>
+        /// <param name="modelType"></param>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        private string GetUpdateSql(Type modelType, PropertyInfo[] properties)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"Update [{modelType.Name}] set ");
+
+            for (int i = 0; i < properties.Length; i++)
+            {
+                if (properties[i].Name.ToLower() == "id") continue;
+
+                sb.Append(i == properties.Length - 2 ? $"{properties[i].Name}=@{properties[i].Name}" : $"{properties[i].Name}=@{properties[i].Name},");
+            }
+            sb.Append(" where Id=@Id ");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 获取删除sql
+        /// </summary>
+        /// <param name="modelType"></param>
+        /// <returns></returns>
+        private string GetDeleteSql(Type modelType)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"Delete FROM [{modelType.Name}] ");
+            sb.Append("where Id=@Id");
+            return sb.ToString();
+        }
+
+
+        /// <summary>
         /// DataReader转实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dr"></param>
         /// <returns></returns>
-        public List<T> DataReaderToModel<T>(SqlDataReader dr)
+        public List<T> DataReaderToModel<T>(SqlDataReader dr) where T : BaseModel.BaseModel
         {
             var list = new List<T>();
-            T t = default;
-            if (dr.HasRows)
+            if (!dr.HasRows) return list;
+            while (dr.Read())
             {
-                while (dr.Read())
+                var t = (T)Activator.CreateInstance(typeof(T));
+                for (var i = 0; i < dr.FieldCount; i++)
                 {
-                    t = (T)Activator.CreateInstance(typeof(T));
-                    for (int i = 0; i < dr.FieldCount; i++)
-                    {
-                        var p = t.GetType().GetProperty(dr.GetName(i), BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
-                        if (Convert.IsDBNull(dr.GetValue(i)))
-                        {
-                            p.SetValue(t, null, null);
-                        }
-                        else
-                        {
-                            p.SetValue(t, dr.GetValue(i), null);
-                        }
-                        list.Add(t);
-                    }
+                    var p = t.GetType().GetProperty(dr.GetName(i), BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+                    if (p != null) p.SetValue(t, Convert.IsDBNull(dr.GetValue(i)) ? null : dr.GetValue(i), null);
+                    list.Add(t);
                 }
             }
             return list;
@@ -83,7 +204,7 @@ namespace HomeWork_1
         /// 获取当前传入实体的所有属性，属性值
         /// </summary>
         /// <param name="t"></param>
-        public void GetTypeInfo(T t)
+        public void GetTypeInfo<T>(T t) where T : BaseModel.BaseModel
         {
             Type type = t.GetType();
 
