@@ -32,7 +32,7 @@ namespace HomeWork_1
         /// </summary>
         public static void FindAll()
         {
-            DbHelper db = new DbHelper();
+            DbHelper db = Factory.GetDbHelper("sql");
             List<Company> list = db.FindAll<Company>();
             List<User> userList = db.FindAll<User>();
 
@@ -51,7 +51,7 @@ namespace HomeWork_1
         /// </summary>
         public static void FindById()
         {
-            DbHelper db = new DbHelper();
+            DbHelper db = Factory.GetDbHelper("sql");
 
             Company company = db.FindById<Company>(1);
             User user = db.FindById<User>(1);
@@ -65,7 +65,7 @@ namespace HomeWork_1
         /// </summary>
         public static void Add()
         {
-            DbHelper db = new DbHelper();
+            DbHelper db = Factory.GetDbHelper("sql");
             Company c = new Company
             {
                 CreateTime = DateTime.Now,
@@ -103,7 +103,7 @@ namespace HomeWork_1
         /// </summary>
         public static void Update()
         {
-            DbHelper db = new DbHelper();
+            DbHelper db = Factory.GetDbHelper("sql");
             Company c = new Company
             {
                 Id = 1002,
@@ -145,8 +145,8 @@ namespace HomeWork_1
         /// </summary>
         public static void Delete()
         {
-            DbHelper db = new DbHelper();
-         
+            DbHelper db = Factory.GetDbHelper("sql");
+
             Console.WriteLine("user");
             Console.WriteLine(db.Delete<User>(2));
             Console.WriteLine("company");

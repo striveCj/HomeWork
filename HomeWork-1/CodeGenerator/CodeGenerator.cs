@@ -12,7 +12,7 @@ namespace HomeWork_1.CodeGenerator
         /// <summary>
         /// 链接字符串，需要转到json配置中去
         /// </summary>
-        private string _connString = @"Data Source=.;Initial Catalog=HomeWork;User ID=sa;Password=sa";
+        private string _connString = Factory.GetConfigInfo();
 
         /// <summary>
         /// 查询数据库数据已DataTable返回

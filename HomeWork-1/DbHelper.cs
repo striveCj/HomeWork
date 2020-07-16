@@ -12,7 +12,7 @@ namespace HomeWork_1
         /// <summary>
         /// 链接字符串，需要转到json配置中去
         /// </summary>
-        private string _connString = @"Data Source=WH-PC-CHENJ30\SQL2014;Initial Catalog=HomeWork;User ID=sa;Password=95938";
+        private string _connString = Factory.GetConfigInfo();
 
         /// <summary>
         /// 查询所有数据
