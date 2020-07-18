@@ -1,4 +1,5 @@
 ﻿using HomeWork_1.CodeGenerator;
+using HomeWork_1.Enum;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +12,7 @@ namespace HomeWork_1
         static void Main(string[] args)
         {
 
-            Add();
+            FindById();
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace HomeWork_1
                 CreatorId = 1,
                 CompanyName = "公司",
                 CompanyId = 1,
-                State = 1,
+                State = (int)StateEnum.Enable,
                 UserType = 1,
                 LastLoginTime = DateTime.Now,
                 CreateTime = DateTime.Now,

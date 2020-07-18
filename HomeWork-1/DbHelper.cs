@@ -1,4 +1,5 @@
 ﻿using HomeWork_1.Attributes;
+using HomeWork_1.Enum;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -44,7 +45,10 @@ namespace HomeWork_1
             {
                 conn.Open();
                 string tableName = t.Name;
-                tableName = GetDbTableName<T>();
+                if (string.IsNullOrEmpty(GetDbTableName<T>()) ==false)
+                {
+                    tableName = GetDbTableName<T>();
+                }
                 string sql = $"select * from [{tableName}] where id=@id";
                 SqlCommand comm = new SqlCommand(sql, conn);
                 comm.Parameters.AddWithValue($"@id", id);
@@ -277,6 +281,24 @@ namespace HomeWork_1
             foreach (var item in properties)
             {
                 Console.WriteLine($"当前属性:{item.Name}.对应属性值:{item.GetValue(t)}");
+
+                if (item.Name=="State")
+                {
+                    var fields = typeof(StateEnum).GetFields();
+
+                    foreach (var field in fields)
+                    {
+                        object[] attributes = field.GetCustomAttributes(true);
+                        foreach (var attr in attributes)
+                        {
+                            if (attr is EnumRemarkAttribute)
+                            {
+                                EnumRemarkAttribute remark = (EnumRemarkAttribute)attr;
+                                Console.WriteLine(remark.Remark);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
