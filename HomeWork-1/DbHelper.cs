@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HomeWork_1.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -42,7 +43,18 @@ namespace HomeWork_1
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 conn.Open();
-                string sql = $"select * from [{t.Name}] where id=@id";
+                string tableName = t.Name;
+                object[] customAttrs = t.GetCustomAttributes(true);
+                
+                for (int i = 0; i < customAttrs.Length; i++)
+                {
+                    if (customAttrs[i] is TableNameAttribute)
+                    {
+                        TableNameAttribute tnAttr = (TableNameAttribute)customAttrs[i];
+                        tableName = tnAttr.TableName;
+                    }
+                }
+                string sql = $"select * from [{tableName}] where id=@id";
                 SqlCommand comm = new SqlCommand(sql, conn);
                 comm.Parameters.AddWithValue($"@id", id);
                 SqlDataReader dr = comm.ExecuteReader();

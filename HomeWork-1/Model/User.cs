@@ -1,6 +1,8 @@
+using HomeWork_1.Attributes;
 using System;
 namespace HomeWork_1.CodeGenerator
 {
+    [TableName("User")]
     public class User:BaseModel.BaseModel
     {
         public int CompanyId {get;set;}
