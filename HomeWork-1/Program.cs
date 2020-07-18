@@ -11,7 +11,7 @@ namespace HomeWork_1
         static void Main(string[] args)
         {
 
-            FindById();
+            Add();
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace HomeWork_1
                 CreatorId = 1,
                 LastModifierId = 1,
                 LastModifyTime = DateTime.Now,
-                Name = "公司"
+                Name = "昆特牌考提请蛋挞马拉松"
             };
             User u=new User
             {

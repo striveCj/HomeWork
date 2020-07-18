@@ -81,7 +81,7 @@ namespace HomeWork_1
         /// <returns></returns>
         public int Add<T>(T t) where T : BaseModel.BaseModel
         {
-            if (!ValidateNameFieldLength<T>())
+            if (!ValidateNameFieldLength<T>(t))
             {
                 Console.WriteLine("校验失败");
                 return 0;
@@ -105,10 +105,10 @@ namespace HomeWork_1
         /// 校验name字符长度
         /// </summary>
         /// <returns></returns>
-        private bool ValidateNameFieldLength<T>()
+        private bool ValidateNameFieldLength<T>(T t)
         {
-            Type t = typeof(T);
-            PropertyInfo[] propertyInfos = t.GetProperties();
+            Type t1 = typeof(T);
+            PropertyInfo[] propertyInfos = t1.GetProperties();
 
             bool checkResult = true;
           
