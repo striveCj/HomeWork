@@ -17,6 +17,7 @@ namespace HomeWork_1.CodeGenerator
         public string Password {get;set;}
         public string Email {get;set;}
         public string Mobile {get;set;}
+        [StateValidate(1,5)]
         public string Name {get;set;}
         public string CompanyName {get;set;}
     }

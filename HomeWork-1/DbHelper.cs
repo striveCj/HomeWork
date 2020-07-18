@@ -44,16 +44,7 @@ namespace HomeWork_1
             {
                 conn.Open();
                 string tableName = t.Name;
-                object[] customAttrs = t.GetCustomAttributes(true);
-                
-                for (int i = 0; i < customAttrs.Length; i++)
-                {
-                    if (customAttrs[i] is TableNameAttribute)
-                    {
-                        TableNameAttribute tnAttr = (TableNameAttribute)customAttrs[i];
-                        tableName = tnAttr.TableName;
-                    }
-                }
+                tableName = GetDbTableName<T>();
                 string sql = $"select * from [{tableName}] where id=@id";
                 SqlCommand comm = new SqlCommand(sql, conn);
                 comm.Parameters.AddWithValue($"@id", id);
@@ -63,12 +54,38 @@ namespace HomeWork_1
         }
 
         /// <summary>
+        /// 获取数据库表名
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private string GetDbTableName<T>() where T : BaseModel.BaseModel, new()
+        {
+            var t = typeof(T);
+            object[] customAttrs = t.GetCustomAttributes(true);
+            string tableName = "";
+            for (int i = 0; i < customAttrs.Length; i++)
+            {
+                if (customAttrs[i] is TableNameAttribute)
+                {
+                    TableNameAttribute tnAttr = (TableNameAttribute)customAttrs[i];
+                    tableName = tnAttr.TableName;
+                }
+            }
+            return tableName;
+        }
+
+        /// <summary>
         /// 新增方法
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
         public int Add<T>(T t) where T : BaseModel.BaseModel
         {
+            if (!ValidateNameFieldLength<T>())
+            {
+                Console.WriteLine("校验失败");
+                return 0;
+            }
             var modelType = t.GetType();
             var properties = modelType.GetProperties();
             using (SqlConnection conn = new SqlConnection(_connString))
@@ -82,6 +99,41 @@ namespace HomeWork_1
                 }
                 return comm.ExecuteNonQuery();
             }
+        }
+
+        /// <summary>
+        /// 校验name字符长度
+        /// </summary>
+        /// <returns></returns>
+        private bool ValidateNameFieldLength<T>()
+        {
+            Type t = typeof(T);
+            PropertyInfo[] propertyInfos = t.GetProperties();
+
+            bool checkResult = true;
+          
+            foreach (var property in propertyInfos)
+            {
+           
+                object[] attrs = property.GetCustomAttributes(true);
+           
+                    foreach (var attr in attrs)
+                    {
+                        if (attr is StateValidateAttribute)
+                        {
+                        StateValidateAttribute stateValidate = (StateValidateAttribute)attr;
+                        checkResult = stateValidate.Validate(property.GetValue(t).ToString().Length);
+                        }
+                    }
+                
+                if (!checkResult)
+                {
+                    Console.WriteLine($"{property.Name}字段长度校验失败");
+                    break;
+                }
+            }
+
+            return checkResult;
         }
 
         /// <summary>
