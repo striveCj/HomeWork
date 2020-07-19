@@ -85,7 +85,7 @@ namespace HomeWork_1
                 CreatorId = 1,
                 CompanyName = "公司",
                 CompanyId = 1,
-                State = (int)StateEnum.Enable,
+                State = 1,
                 UserType = 1,
                 LastLoginTime = DateTime.Now,
                 CreateTime = DateTime.Now,

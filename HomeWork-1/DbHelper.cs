@@ -284,20 +284,16 @@ namespace HomeWork_1
 
                 if (item.Name=="State")
                 {
-                    var fields = typeof(StateEnum).GetFields();
-
-                    foreach (var field in fields)
-                    {
-                        object[] attributes = field.GetCustomAttributes(true);
+                        StateEnum s = (StateEnum)item.GetValue(t);
+                        object[] attributes =s.GetType().GetField(s.ToString()).GetCustomAttributes(true);
                         foreach (var attr in attributes)
                         {
                             if (attr is EnumRemarkAttribute)
                             {
                                 EnumRemarkAttribute remark = (EnumRemarkAttribute)attr;
-                                Console.WriteLine(remark.Remark);
+                                Console.WriteLine($"状态描述为:{remark.Remark}");
                             }
                         }
-                    }
                 }
             }
         }
