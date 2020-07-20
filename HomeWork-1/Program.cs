@@ -11,7 +11,11 @@ namespace HomeWork_1
         static void Main(string[] args)
         {
 
-            Delete();
+            //Delete();
+            int? a = 0;
+            Console.WriteLine(a.GetType());
+            Console.WriteLine(typeof(int?));
+
         }
 
         /// <summary>
