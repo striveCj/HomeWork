@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HomeWork_1.Attributes;
+using HomeWork_1.Enum;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -42,12 +44,38 @@ namespace HomeWork_1
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 conn.Open();
-                string sql = $"select * from [{t.Name}] where id=@id";
+                string tableName = t.Name;
+                if (string.IsNullOrEmpty(GetDbTableName<T>()) ==false)
+                {
+                    tableName = GetDbTableName<T>();
+                }
+                string sql = $"select * from [{tableName}] where id=@id";
                 SqlCommand comm = new SqlCommand(sql, conn);
                 comm.Parameters.AddWithValue($"@id", id);
                 SqlDataReader dr = comm.ExecuteReader();
                 return DataReaderToModel<T>(dr)[0];
             }
+        }
+
+        /// <summary>
+        /// 获取数据库表名
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private string GetDbTableName<T>() where T : BaseModel.BaseModel, new()
+        {
+            var t = typeof(T);
+            object[] customAttrs = t.GetCustomAttributes(true);
+            string tableName = "";
+            for (int i = 0; i < customAttrs.Length; i++)
+            {
+                if (customAttrs[i] is TableNameAttribute)
+                {
+                    TableNameAttribute tnAttr = (TableNameAttribute)customAttrs[i];
+                    tableName = tnAttr.TableName;
+                }
+            }
+            return tableName;
         }
 
         /// <summary>
@@ -57,6 +85,11 @@ namespace HomeWork_1
         /// <returns></returns>
         public int Add<T>(T t) where T : BaseModel.BaseModel
         {
+            if (!ValidateNameFieldLength<T>(t))
+            {
+                Console.WriteLine("校验失败");
+                return 0;
+            }
             var modelType = t.GetType();
             var properties = modelType.GetProperties();
             using (SqlConnection conn = new SqlConnection(_connString))
@@ -70,6 +103,41 @@ namespace HomeWork_1
                 }
                 return comm.ExecuteNonQuery();
             }
+        }
+
+        /// <summary>
+        /// 校验name字符长度
+        /// </summary>
+        /// <returns></returns>
+        private bool ValidateNameFieldLength<T>(T t)
+        {
+            Type t1 = typeof(T);
+            PropertyInfo[] propertyInfos = t1.GetProperties();
+
+            bool checkResult = true;
+          
+            foreach (var property in propertyInfos)
+            {
+           
+                object[] attrs = property.GetCustomAttributes(true);
+           
+                    foreach (var attr in attrs)
+                    {
+                        if (attr is StateValidateAttribute)
+                        {
+                        StateValidateAttribute stateValidate = (StateValidateAttribute)attr;
+                        checkResult = stateValidate.Validate(property.GetValue(t).ToString().Length);
+                        }
+                    }
+                
+                if (!checkResult)
+                {
+                    Console.WriteLine($"{property.Name}字段长度校验失败");
+                    break;
+                }
+            }
+
+            return checkResult;
         }
 
         /// <summary>
@@ -213,6 +281,20 @@ namespace HomeWork_1
             foreach (var item in properties)
             {
                 Console.WriteLine($"当前属性:{item.Name}.对应属性值:{item.GetValue(t)}");
+
+                if (item.Name=="State")
+                {
+                        StateEnum s = (StateEnum)item.GetValue(t);
+                        object[] attributes =s.GetType().GetField(s.ToString()).GetCustomAttributes(true);
+                        foreach (var attr in attributes)
+                        {
+                            if (attr is EnumRemarkAttribute)
+                            {
+                                EnumRemarkAttribute remark = (EnumRemarkAttribute)attr;
+                                Console.WriteLine($"状态描述为:{remark.Remark}");
+                            }
+                        }
+                }
             }
         }
     }

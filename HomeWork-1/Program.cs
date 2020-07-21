@@ -1,4 +1,5 @@
 ﻿using HomeWork_1.CodeGenerator;
+using HomeWork_1.Enum;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,11 +12,7 @@ namespace HomeWork_1
         static void Main(string[] args)
         {
 
-            //Delete();
-            int? a = 0;
-            Console.WriteLine(a.GetType());
-            Console.WriteLine(typeof(int?));
-
+            FindById();
         }
 
         /// <summary>
@@ -76,7 +73,7 @@ namespace HomeWork_1
                 CreatorId = 1,
                 LastModifierId = 1,
                 LastModifyTime = DateTime.Now,
-                Name = "公司"
+                Name = "昆特牌考提请蛋挞马拉松"
             };
             User u=new User
             {
