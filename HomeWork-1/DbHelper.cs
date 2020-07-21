@@ -16,10 +16,13 @@ namespace HomeWork_1
         /// </summary>
         private string _connString = Factory.GetConfigInfo();
 
+
         /// <summary>
         /// 查询所有数据
         /// </summary>
         /// <returns></returns>
+        [After]
+        [Befor]
         public List<T> FindAll<T>() where T:BaseModel.BaseModel
         {
             Type t = typeof(T);
@@ -125,8 +128,8 @@ namespace HomeWork_1
                     {
                         if (attr is StateValidateAttribute)
                         {
-                        StateValidateAttribute stateValidate = (StateValidateAttribute)attr;
-                        checkResult = stateValidate.Validate(property.GetValue(t).ToString().Length);
+                          StateValidateAttribute stateValidate = (StateValidateAttribute)attr;
+                          checkResult = stateValidate.Validate(property.GetValue(t).ToString().Length);
                         }
                     }
                 

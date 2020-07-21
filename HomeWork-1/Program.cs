@@ -3,6 +3,9 @@ using HomeWork_1.Enum;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection;
+using HomeWork_1.Attributes;
 
 namespace HomeWork_1
 {
@@ -12,7 +15,7 @@ namespace HomeWork_1
         static void Main(string[] args)
         {
 
-            FindById();
+            CommissionedToUse();
         }
 
         /// <summary>
@@ -154,5 +157,36 @@ namespace HomeWork_1
             Console.WriteLine(db.Delete<Company>(1002));
         }
 
+        /// <summary>
+        /// 嵌套委托调用方法
+        /// </summary>
+        public static void CommissionedToUse()
+        {
+            DbHelper db = Factory.GetDbHelper("sql");
+            Action action = () =>
+            {
+                foreach (var item in db.FindAll<User>())
+                {
+                    db.GetTypeInfo(item);
+                }
+            };
+            Type type = db.GetType();
+  
+                var methods = type.GetMethods();
+                foreach (var method in methods)
+                {
+                    var after= method.GetCustomAttributes(typeof(AfterAttribute), true);
+                    foreach (AfterAttribute item in after)
+                    {
+                        action = item.Invoke(action);
+                    }
+                    var befor = method.GetCustomAttributes(typeof(BeforAttribute), true);
+                    foreach (BeforAttribute item in befor)
+                    {
+                        action = item.Invoke(action);
+                    }
+                }
+                action.Invoke();
+        }
     }
 }
