@@ -186,7 +186,7 @@ namespace HomeWork_1
                         action = item.Invoke(action);
                     }
                 }
-                action.Invoke(); ;
+                action.Invoke(); 
         }
     }
 }
