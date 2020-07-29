@@ -1,5 +1,6 @@
 ﻿using HomeWork_1.Attributes;
 using HomeWork_1.Enum;
+using HomeWork_1.ListExtension;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -37,7 +38,7 @@ namespace HomeWork_1
         }
 
         /// <summary>
-        /// 更具主键获取参数
+        /// 根据主键获取数据
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -88,7 +89,7 @@ namespace HomeWork_1
         /// <returns></returns>
         public int Add<T>(T t) where T : BaseModel.BaseModel
         {
-            if (!ValidateNameFieldLength<T>(t))
+            if (!t.ValidateNameFieldLength())
             {
                 Console.WriteLine("校验失败");
                 return 0;
@@ -112,36 +113,36 @@ namespace HomeWork_1
         /// 校验name字符长度
         /// </summary>
         /// <returns></returns>
-        private bool ValidateNameFieldLength<T>(T t)
-        {
-            Type t1 = typeof(T);
-            PropertyInfo[] propertyInfos = t1.GetProperties();
+        //private bool ValidateNameFieldLength<T>(T t)
+        //{
+        //    Type t1 = typeof(T);
+        //    PropertyInfo[] propertyInfos = t1.GetProperties();
 
-            bool checkResult = true;
+        //    bool checkResult = true;
           
-            foreach (var property in propertyInfos)
-            {
+        //    foreach (var property in propertyInfos)
+        //    {
            
-                object[] attrs = property.GetCustomAttributes(true);
+        //        object[] attrs = property.GetCustomAttributes(true);
            
-                    foreach (var attr in attrs)
-                    {
-                        if (attr is StateValidateAttribute)
-                        {
-                          StateValidateAttribute stateValidate = (StateValidateAttribute)attr;
-                          checkResult = stateValidate.Validate(property.GetValue(t).ToString().Length);
-                        }
-                    }
+        //            foreach (var attr in attrs)
+        //            {
+        //                if (attr is StateValidateAttribute)
+        //                {
+        //                  StateValidateAttribute stateValidate = (StateValidateAttribute)attr;
+        //                  checkResult = stateValidate.Validate(property.GetValue(t).ToString().Length);
+        //                }
+        //            }
                 
-                if (!checkResult)
-                {
-                    Console.WriteLine($"{property.Name}字段长度校验失败");
-                    break;
-                }
-            }
+        //        if (!checkResult)
+        //        {
+        //            Console.WriteLine($"{property.Name}字段长度校验失败");
+        //            break;
+        //        }
+        //    }
 
-            return checkResult;
-        }
+        //    return checkResult;
+        //}
 
         /// <summary>
         /// 修改方法

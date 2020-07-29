@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using HomeWork_1.Attributes;
+using HomeWork_1.ListExtension;
 
 namespace HomeWork_1
 {
@@ -15,7 +16,8 @@ namespace HomeWork_1
         static void Main(string[] args)
         {
 
-            CommissionedToUse();
+            //CommissionedToUse();
+            FindAll();
         }
 
         /// <summary>
@@ -40,11 +42,11 @@ namespace HomeWork_1
             List<Company> list = db.FindAll<Company>();
             List<User> userList = db.FindAll<User>();
 
-            foreach (var item in list)
+            foreach (var item in list.JakeWhere(item=>item.Id==1))
             {
                 db.GetTypeInfo(item);
             }
-            foreach (var item in userList)
+            foreach (var item in userList.JakeWhere(item=>item.Id==1))
             {
                 db.GetTypeInfo(item);
             }

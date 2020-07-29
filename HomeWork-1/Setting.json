@@ -1,5 +1,5 @@
 {
   "ConnectionStrings": {
-    "HomeWork": "Data Source=WH-PC-CHENJ30\\Sql2014;Initial Catalog=HomeWork;User ID=sa;Password=95938"
+    "HomeWork": "Data Source=.;Initial Catalog=HomeWork;User ID=sa;Password=w1!"
   }
 }
