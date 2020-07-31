@@ -184,6 +184,7 @@ namespace HomeWork_1
                 SqlCommand comm = new SqlCommand(sql, conn);
                 comm.Parameters.AddWithValue($"@Id",id);
                 return comm.ExecuteNonQuery();
+
             }
         }
 
