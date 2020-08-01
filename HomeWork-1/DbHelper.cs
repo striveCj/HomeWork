@@ -302,6 +302,15 @@ namespace HomeWork_1
                 }
             }
         }
+
+        public void Sql()
+        {
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+
+            }
+        }
     }
 
 }
