@@ -303,12 +303,14 @@ namespace HomeWork_1
             }
         }
 
-        public void Sql()
+        public delegate SqlCommand SqlMothed();
+
+        public void Sql(SqlMothed sqlMothed)
         {
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 conn.Open();
-
+                sqlMothed.Invoke();
             }
         }
     }
