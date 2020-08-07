@@ -26,15 +26,17 @@ namespace HomeWork_1
         [Befor]
         public List<T> FindAll<T>() where T:BaseModel.BaseModel
         {
+
+            return Sql<T>(GetList);
+        }
+
+        public List<T> GetList<T>(SqlConnection conn) where T : BaseModel.BaseModel
+        {
             Type t = typeof(T);
-            using (SqlConnection conn=new SqlConnection(_connString))
-            {
-                conn.Open();
-                string sql = $"select * from [{t.Name}]";
-                SqlCommand comm = new SqlCommand(sql, conn);
-                SqlDataReader dr = comm.ExecuteReader();
-                return DataReaderToModel<T>(dr);
-            }
+            string sql = $"select * from [{t.Name}]";
+            SqlCommand comm = new SqlCommand(sql, conn);
+            SqlDataReader dr = comm.ExecuteReader();
+            return DataReaderToModel<T>(dr);
         }
 
         /// <summary>
@@ -303,14 +305,14 @@ namespace HomeWork_1
             }
         }
 
-        public delegate T SqlMothed<T>();
+        public delegate T SqlMothed<T>(SqlConnection conn) where T:BaseModel.BaseModel;
 
-        public T Sql<T>(SqlMothed<T> sqlMothed)
+        public T Sql<T>(SqlMothed<T> sqlMothed) where T : BaseModel.BaseModel
         {
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 conn.Open();
-                var t= sqlMothed.Invoke();
+                var t= sqlMothed.Invoke(conn);
                 return t;
             }
         }
