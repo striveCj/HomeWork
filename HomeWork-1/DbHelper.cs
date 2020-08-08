@@ -27,7 +27,7 @@ namespace HomeWork_1
         public List<T> FindAll<T>() where T:BaseModel.BaseModel
         {
 
-            return Sql<T>(GetList);
+            return Sql(GetList<T>);
         }
 
         public List<T> GetList<T>(SqlConnection conn) where T : BaseModel.BaseModel
@@ -305,14 +305,26 @@ namespace HomeWork_1
             }
         }
 
-        public delegate T SqlMothed<T>(SqlConnection conn) where T:BaseModel.BaseModel;
+        public delegate List<T> SqlMothed<T>(SqlConnection conn) where T:BaseModel.BaseModel;
 
-        public T Sql<T>(SqlMothed<T> sqlMothed) where T : BaseModel.BaseModel
+        public List<T> Sql<T>(SqlMothed<T> sqlMothed) where T : BaseModel.BaseModel
         {
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 conn.Open();
                 var t= sqlMothed.Invoke(conn);
+                return t;
+            }
+        }
+
+        public delegate T SqlMothedT<T>(SqlConnection conn) where T : BaseModel.BaseModel;
+
+        public T SqlT<T>(SqlMothedT<T> sqlMothed) where T : BaseModel.BaseModel
+        {
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+                var t = sqlMothed.Invoke(conn);
                 return t;
             }
         }
