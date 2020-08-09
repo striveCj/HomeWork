@@ -26,7 +26,6 @@ namespace HomeWork_1
         [Befor]
         public List<T> FindAll<T>() where T:BaseModel.BaseModel
         {
-
             return Sql(GetList<T>);
         }
 
@@ -46,22 +45,23 @@ namespace HomeWork_1
         /// <returns></returns>
         public T FindById<T>(int id) where T : BaseModel.BaseModel, new()
         {
-            var t = typeof(T);
-            using (SqlConnection conn = new SqlConnection(_connString))
-            {
-                conn.Open();
-                string tableName = t.Name;
-                if (string.IsNullOrEmpty(GetDbTableName<T>()) ==false)
-                {
-                    tableName = GetDbTableName<T>();
-                }
-                string sql = $"select * from [{tableName}] where id=@id";
-                SqlCommand comm = new SqlCommand(sql, conn);
-                comm.Parameters.AddWithValue($"@id", id);
-                SqlDataReader dr = comm.ExecuteReader();
-                return DataReaderToModel<T>(dr)[0];
-            }
+            return SqlT(GetModel<T>);
         }
+
+        public T GetModel<T>(SqlConnection conn) where T : BaseModel.BaseModel, new()
+        {
+            string tableName =typeof(T).Name;
+            if (string.IsNullOrEmpty(GetDbTableName<T>()) == false)
+            {
+                tableName = GetDbTableName<T>();
+            }
+            string sql = $"select * from [{tableName}] where id=@id";
+            SqlCommand comm = new SqlCommand(sql, conn);
+            comm.Parameters.AddWithValue($"@id", id);
+            SqlDataReader dr = comm.ExecuteReader();
+            return DataReaderToModel<T>(dr)[0];
+        }
+
 
         /// <summary>
         /// 获取数据库表名
