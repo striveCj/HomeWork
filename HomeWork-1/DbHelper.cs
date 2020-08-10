@@ -45,10 +45,10 @@ namespace HomeWork_1
         /// <returns></returns>
         public T FindById<T>(int id) where T : BaseModel.BaseModel, new()
         {
-            return SqlT(GetModel<T>);
+            return SqlT(GetModel<T>,id);
         }
 
-        public T GetModel<T>(SqlConnection conn) where T : BaseModel.BaseModel, new()
+        public T GetModel<T>(SqlConnection conn,int id) where T : BaseModel.BaseModel, new()
         {
             string tableName =typeof(T).Name;
             if (string.IsNullOrEmpty(GetDbTableName<T>()) == false)
@@ -317,14 +317,14 @@ namespace HomeWork_1
             }
         }
 
-        public delegate T SqlMothedT<T>(SqlConnection conn) where T : BaseModel.BaseModel;
+        public delegate T SqlMothedT<T>(SqlConnection conn,int id) where T : BaseModel.BaseModel;
 
-        public T SqlT<T>(SqlMothedT<T> sqlMothed) where T : BaseModel.BaseModel
+        public T SqlT<T>(SqlMothedT<T> sqlMothed,int id) where T : BaseModel.BaseModel
         {
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 conn.Open();
-                var t = sqlMothed.Invoke(conn);
+                var t = sqlMothed.Invoke(conn,id);
                 return t;
             }
         }
