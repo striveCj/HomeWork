@@ -14,6 +14,6 @@ namespace HomeWork_1.Attributes
         public EnumRemarkAttribute(string remark)
         {
             Remark = remark;
-        }
+        } 
     }
 }
