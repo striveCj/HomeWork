@@ -29,10 +29,10 @@ namespace HomeWork_1
             return Sql(GetList<T>);
         }
 
-        public List<T> GetList<T>(SqlConnection conn) where T : BaseModel.BaseModel
+        public List<T> GetList<T>(SqlConnection conn) where T : BaseModel.BaseModel, new()
         {
-            Type t = typeof(T);
-            string sql = $"select * from [{t.Name}]";
+            
+            string sql = $"select * from [{GetDbTableName<T>()}]";
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr = comm.ExecuteReader();
             return DataReaderToModel<T>(dr);
