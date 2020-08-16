@@ -5,6 +5,7 @@ namespace HomeWork_1.CodeGenerator
     [TableName("User")]
     public class User:BaseModel.BaseModel
     {
+        [ColumnName("CompanyId")]
         public int CompanyId {get;set;}
         public int State {get;set;}
         public int UserType {get;set;}
