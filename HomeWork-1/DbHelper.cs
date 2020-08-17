@@ -84,6 +84,17 @@ namespace HomeWork_1
             return tableName;
         }
 
+        private string GetDbCloumnName<T>() where T : BaseModel.BaseModel, new()
+        {
+            var t= typeof(T);
+            var p = t.GetProperties();
+            for (int i = 0; i < p.Length; i++)
+            {
+                p[i].GetCustomAttributes(true);
+            }
+            return "";
+        }
+
         /// <summary>
         /// 新增方法
         /// </summary>
