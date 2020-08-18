@@ -84,15 +84,30 @@ namespace HomeWork_1
             return tableName;
         }
 
-        private string GetDbCloumnName<T>() where T : BaseModel.BaseModel, new()
+        private string GetDbCloumnName<T>(string cloumnName) where T : BaseModel.BaseModel, new()
         {
             var t= typeof(T);
             var p = t.GetProperties();
+
             for (int i = 0; i < p.Length; i++)
             {
-                p[i].GetCustomAttributes(true);
+         
+               
+                object[] customAttrs = p[i].GetCustomAttributes(true);
+                for (int j = 0; j < customAttrs.Length; i++)
+                {
+                    if (customAttrs[j] is ColumnNameAttribute)
+                    {
+                        ColumnNameAttribute tnAttr = (ColumnNameAttribute)customAttrs[i];
+                        if (p[i].Name == cloumnName)
+                        {
+                            return tnAttr.ColumnName;
+                        }
+                    }
+                }
             }
-            return "";
+
+            return cloumnName;
         }
 
         /// <summary>
