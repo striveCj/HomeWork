@@ -91,8 +91,6 @@ namespace HomeWork_1
 
             for (int i = 0; i < p.Length; i++)
             {
-         
-               
                 object[] customAttrs = p[i].GetCustomAttributes(true);
                 for (int j = 0; j < customAttrs.Length; i++)
                 {
@@ -106,7 +104,6 @@ namespace HomeWork_1
                     }
                 }
             }
-
             return cloumnName;
         }
 
