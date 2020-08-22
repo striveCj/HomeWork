@@ -7,8 +7,11 @@ namespace HomeWork_1.CodeGenerator
     {
         [ColumnName("CompanyId")]
         public int CompanyId {get;set;}
+        [ColumnName("State")]
         public int State {get;set;}
+        [ColumnName("UserType")]
         public int UserType {get;set;}
+        [ColumnName("CreatorId")]
         public int CreatorId {get;set;}
         public int LastModifierId {get;set;}
         public DateTime LastLoginTime {get;set;}
