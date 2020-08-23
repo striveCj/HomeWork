@@ -13,6 +13,7 @@ namespace HomeWork_1.CodeGenerator
         public int UserType {get;set;}
         [ColumnName("CreatorId")]
         public int CreatorId {get;set;}
+        [ColumnName("LastModifierId")]
         public int LastModifierId {get;set;}
         public DateTime LastLoginTime {get;set;}
         public DateTime CreateTime {get;set;}
