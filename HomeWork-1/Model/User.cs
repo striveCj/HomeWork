@@ -19,6 +19,7 @@ namespace HomeWork_1.CodeGenerator
         public DateTime LastLoginTime {get;set;}
         [ColumnName("CreateTime")]
         public DateTime CreateTime {get;set;}
+        [ColumnName("LastModifyTime")]
         public DateTime LastModifyTime {get;set;}
         public string Account {get;set;}
         public string Password {get;set;}
