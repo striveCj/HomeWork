@@ -21,6 +21,7 @@ namespace HomeWork_1.CodeGenerator
         public DateTime CreateTime {get;set;}
         [ColumnName("LastModifyTime")]
         public DateTime LastModifyTime {get;set;}
+        [ColumnName("Account")]
         public string Account {get;set;}
         public string Password {get;set;}
         public string Email {get;set;}
