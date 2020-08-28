@@ -23,6 +23,7 @@ namespace HomeWork_1.CodeGenerator
         public DateTime LastModifyTime {get;set;}
         [ColumnName("Account")]
         public string Account {get;set;}
+        [ColumnName("Password")]
         public string Password {get;set;}
         public string Email {get;set;}
         public string Mobile {get;set;}
