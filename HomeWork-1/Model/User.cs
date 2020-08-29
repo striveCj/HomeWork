@@ -25,6 +25,7 @@ namespace HomeWork_1.CodeGenerator
         public string Account {get;set;}
         [ColumnName("Password")]
         public string Password {get;set;}
+        [ColumnName("Email")]
         public string Email {get;set;}
         public string Mobile {get;set;}
         [StateValidate(1,5)]
