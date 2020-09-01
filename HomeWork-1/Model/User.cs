@@ -32,6 +32,7 @@ namespace HomeWork_1.CodeGenerator
         [StateValidate(1,5)]
         [ColumnName("Name")]
         public string Name {get;set;}
+        [ColumnName("CompanyName")]
         public string CompanyName {get;set;}
     }
 }
