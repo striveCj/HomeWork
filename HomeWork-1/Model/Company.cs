@@ -4,6 +4,7 @@ namespace HomeWork_1.CodeGenerator
 {
     public class Company:BaseModel.BaseModel
     {
+        [ColumnName("CreatorId")]
         public int CreatorId {get;set;}
         public int LastModifierId {get;set;}
         public DateTime CreateTime {get;set;}
