@@ -8,6 +8,7 @@ namespace HomeWork_1.CodeGenerator
         public int CreatorId {get;set;}
         [ColumnName("LastModifierId")]
         public int LastModifierId {get;set;}
+        [ColumnName("CreateTime")]
         public DateTime CreateTime {get;set;}
         public DateTime LastModifyTime {get;set;}
         [StateValidate(1, 5)]
