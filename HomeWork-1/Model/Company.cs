@@ -13,6 +13,7 @@ namespace HomeWork_1.CodeGenerator
         [ColumnName("LastModifyTime")]
         public DateTime LastModifyTime {get;set;}
         [StateValidate(1, 5)]
+        [ColumnName("Name")]
         public string Name {get;set;}
     }
 }
