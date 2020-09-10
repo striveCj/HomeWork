@@ -123,7 +123,7 @@ namespace HomeWork_1
             {
                 Name = "我与春风皆过客1",
                 Account = "Account1",
-                Password = "Password",
+                Password = "Password1",
                 Email = "530216775@qq.com",
                 Mobile = "15007140962",
                 CreatorId = 2,
