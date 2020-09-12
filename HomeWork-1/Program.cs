@@ -127,7 +127,7 @@ namespace HomeWork_1
                 Email = "530216775@qq.com",
                 Mobile = "15007140962",
                 CreatorId = 21,
-                CompanyName = "公司",
+                CompanyName = "公司1",
                 CompanyId = 21,
                 State = 1,
                 UserType = 2,
