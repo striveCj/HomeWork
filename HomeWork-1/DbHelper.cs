@@ -26,15 +26,16 @@ namespace HomeWork_1
         [Befor]
         public List<T> FindAll<T>() where T:BaseModel.BaseModel
         {
-            Type t = typeof(T);
-            using (SqlConnection conn=new SqlConnection(_connString))
-            {
-                conn.Open();
-                string sql = $"select * from [{t.Name}]";
-                SqlCommand comm = new SqlCommand(sql, conn);
-                SqlDataReader dr = comm.ExecuteReader();
-                return DataReaderToModel<T>(dr);
-            }
+            return Sql(GetList<T>);
+        }
+
+        public List<T> GetList<T>(SqlConnection conn) where T : BaseModel.BaseModel, new()
+        {
+            
+            string sql = $"select * from [{GetDbTableName<T>()}]";
+            SqlCommand comm = new SqlCommand(sql, conn);
+            SqlDataReader dr = comm.ExecuteReader();
+            return DataReaderToModel<T>(dr);
         }
 
         /// <summary>
@@ -44,22 +45,23 @@ namespace HomeWork_1
         /// <returns></returns>
         public T FindById<T>(int id) where T : BaseModel.BaseModel, new()
         {
-            var t = typeof(T);
-            using (SqlConnection conn = new SqlConnection(_connString))
-            {
-                conn.Open();
-                string tableName = t.Name;
-                if (string.IsNullOrEmpty(GetDbTableName<T>()) ==false)
-                {
-                    tableName = GetDbTableName<T>();
-                }
-                string sql = $"select * from [{tableName}] where id=@id";
-                SqlCommand comm = new SqlCommand(sql, conn);
-                comm.Parameters.AddWithValue($"@id", id);
-                SqlDataReader dr = comm.ExecuteReader();
-                return DataReaderToModel<T>(dr)[0];
-            }
+            return SqlT(GetModel<T>,id);
         }
+
+        public T GetModel<T>(SqlConnection conn,int id) where T : BaseModel.BaseModel, new()
+        {
+            string tableName =typeof(T).Name;
+            if (string.IsNullOrEmpty(GetDbTableName<T>()) == false)
+            {
+                tableName = GetDbTableName<T>();
+            }
+            string sql = $"select * from [{tableName}] where id=@id";
+            SqlCommand comm = new SqlCommand(sql, conn);
+            comm.Parameters.AddWithValue($"@id", id);
+            SqlDataReader dr = comm.ExecuteReader();
+            return DataReaderToModel<T>(dr)[0];
+        }
+
 
         /// <summary>
         /// 获取数据库表名
@@ -80,6 +82,29 @@ namespace HomeWork_1
                 }
             }
             return tableName;
+        }
+
+        private string GetDbCloumnName<T>(string cloumnName) where T : BaseModel.BaseModel, new()
+        {
+            var t= typeof(T);
+            var p = t.GetProperties();
+
+            for (int i = 0; i < p.Length; i++)
+            {
+                object[] customAttrs = p[i].GetCustomAttributes(true);
+                for (int j = 0; j < customAttrs.Length; i++)
+                {
+                    if (customAttrs[j] is ColumnNameAttribute)
+                    {
+                        ColumnNameAttribute tnAttr = (ColumnNameAttribute)customAttrs[i];
+                        if (p[i].Name == cloumnName)
+                        {
+                            return tnAttr.ColumnName;
+                        }
+                    }
+                }
+            }
+            return cloumnName;
         }
 
         /// <summary>
@@ -184,6 +209,7 @@ namespace HomeWork_1
                 SqlCommand comm = new SqlCommand(sql, conn);
                 comm.Parameters.AddWithValue($"@Id",id);
                 return comm.ExecuteNonQuery();
+
             }
         }
 
@@ -299,6 +325,30 @@ namespace HomeWork_1
                             }
                         }
                 }
+            }
+        }
+
+        public delegate List<T> SqlMothed<T>(SqlConnection conn) where T:BaseModel.BaseModel;
+
+        public List<T> Sql<T>(SqlMothed<T> sqlMothed) where T : BaseModel.BaseModel
+        {
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+                var t= sqlMothed.Invoke(conn);
+                return t;
+            }
+        }
+
+        public delegate T SqlMothedT<T>(SqlConnection conn,int id) where T : BaseModel.BaseModel;
+
+        public T SqlT<T>(SqlMothedT<T> sqlMothed,int id) where T : BaseModel.BaseModel
+        {
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+                var t = sqlMothed.Invoke(conn,id);
+                return t;
             }
         }
     }

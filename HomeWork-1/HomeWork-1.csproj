@@ -10,6 +10,7 @@
     <None Remove="Attributes\EnumRemarkAttribute.cs~RF2ee30f3.TMP" />
     <None Remove="Enum\StateEnum.cs~RF2efaaf0.TMP" />
     <None Remove="Model\Company.cs~RF2daac1f.TMP" />
+    <None Remove="Repository\IRepository.cs~RF50530c.TMP" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@ namespace HomeWork_1.Attributes
     /// <summary>
     /// 数据表名特性
     /// </summary>
-    public class TableNameAttribute:Attribute
+    public class TableNameAttribute: MapDbAttribute
     {
         public TableNameAttribute(string tableName)
         {
