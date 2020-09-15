@@ -7,12 +7,12 @@ namespace Homework_2
     public class Work
     {
         /// <summary>
-        /// 待通知对象继承的接口集合
+        /// 鱼漂集合
         /// </summary>
         public List<IBaseInterface> Observers=new List<IBaseInterface>();
 
         /// <summary>
-        /// 通知所有观察者
+        /// 鱼漂动了
         /// </summary>
         public void CallAllObservers()
         {
@@ -23,7 +23,7 @@ namespace Homework_2
         }
 
         /// <summary>
-        /// 添加观察者
+        /// 添加鱼漂
         /// </summary>
         /// <param name="observer"></param>
         public void AddObserver(IBaseInterface observer)
@@ -32,7 +32,7 @@ namespace Homework_2
         }
 
         /// <summary>
-        /// 移除观察者
+        /// 移除鱼漂
         /// </summary>
         /// <param name="observer"></param>
         public void RemoveObserver(IBaseInterface observer)
@@ -41,7 +41,7 @@ namespace Homework_2
         }
         
         /// <summary>
-        /// 通知所有观察者要执行动作
+        /// 钓鱼
         /// </summary>
         public void GetUpAction()
         {
