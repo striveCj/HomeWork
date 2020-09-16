@@ -135,7 +135,7 @@ namespace HomeWork_1
                 CreateTime = DateTime.Now,
                 LastModifyTime = DateTime.Now,
                 LastModifierId = 21,
-                Id=2
+                Id=21
             };
 
        
