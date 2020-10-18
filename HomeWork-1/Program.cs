@@ -151,7 +151,7 @@ namespace HomeWork_1
         /// </summary>
         public static void Delete()
         {
-            DbHelper db = Factory.GetDbHelper("sql1");
+            DbHelper db = Factory.GetDbHelper("sql");
 
             Console.WriteLine("user");
             Console.WriteLine(db.Delete<User>(2));
