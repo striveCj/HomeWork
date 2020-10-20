@@ -121,7 +121,7 @@ namespace HomeWork_1
             };
             User u = new User
             {
-                Name = "我与春风皆过客1211111111",
+                Name = "我与春风皆过客12111111111",
                 Account = "Account11111",
                 Password = "Password11",
                 Email = "530216775@qq.com",
