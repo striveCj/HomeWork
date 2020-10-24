@@ -128,7 +128,7 @@ namespace HomeWork_1
                 Mobile = "15007140962",
                 CreatorId = 21,
                 CompanyName = "公司1111111111112",
-                CompanyId = 211,
+                CompanyId = 2111,
                 State = 111,
                 UserType = 211,
                 LastLoginTime = DateTime.Now,
