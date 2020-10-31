@@ -129,7 +129,7 @@ namespace HomeWork_1
                 CreatorId = 21,
                 CompanyName = "公司1111111111112",
                 CompanyId = 2111,
-                State = 1111,
+                State = 11111,
                 UserType = 2111,
                 LastLoginTime = DateTime.Now,
                 CreateTime = DateTime.Now,
